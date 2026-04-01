@@ -36,7 +36,6 @@ jobs:
             --onefile ^
             --windowed ^
             --name "VirtualCamCompanion" ^
-            --icon "app.ico" ^
             --distpath "dist" ^
             --workpath "build" ^
             --specpath "." ^

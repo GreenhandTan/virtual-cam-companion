@@ -23,7 +23,6 @@ WizardStyle=modern
 PrivilegesRequired=admin
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-SetupIconFile=app.ico
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -33,7 +32,6 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription:
 
 [Files]
 Source: "dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "app.ico"; DestDir: "{app}"; Flags: ignoreversion
 #ifdef IncludeVcam32
 Source: "driver\obs-virtualcam-module32.dll"; DestDir: "{app}\driver"; Flags: regserver ignoreversion; Check: not Is64BitInstallMode
 #endif
