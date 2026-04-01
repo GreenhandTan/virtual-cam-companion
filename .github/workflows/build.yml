@@ -21,12 +21,15 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pyvirtualcam opencv-python Pillow pyinstaller
 
-      - name: Build with PyInstaller
+      - name: Extract OBS Virtual Camera driver
+        run: powershell -ExecutionPolicy Bypass -File scripts/extract_obs_vcam.ps1
+
+      - name: Build exe with PyInstaller
         shell: cmd
         run: |
           pyinstaller ^
@@ -38,7 +41,7 @@ jobs:
             --specpath "." ^
             app.py
 
-      - name: Compile Installer with Inno Setup
+      - name: Compile Installer (Inno Setup)
         shell: cmd
         run: |
           choco install innosetup -y
