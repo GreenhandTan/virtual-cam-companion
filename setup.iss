@@ -1,6 +1,6 @@
 ; Inno Setup 脚本 - VirtualCam Companion 安装包（含虚拟摄像头驱动）
 #define MyAppName "VirtualCam Companion"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "GreenhandTan"
 #define MyAppURL "https://github.com/GreenhandTan/virtual-cam-companion"
 #define MyAppExeName "VirtualCamCompanion.exe"
