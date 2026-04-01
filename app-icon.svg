@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- 背景圆 -->
+  <circle cx="128" cy="128" r="120" fill="#6c63ff" />
+  
+  <!-- 摄像机主体 -->
+  <rect x="60" y="80" width="136" height="96" rx="20" fill="#ffffff" />
+  
+  <!-- 摄像机镜头 -->
+  <circle cx="128" cy="128" r="32" fill="#1a1a2e" />
+  <circle cx="128" cy="128" r="24" fill="#6c63ff" />
+  <circle cx="128" cy="128" r="16" fill="#ffffff" />
+  <circle cx="128" cy="128" r="8" fill="#1a1a2e" />
+  
+  <!-- 摄像机闪光灯 -->
+  <rect x="168" y="65" width="20" height="8" rx="3" fill="#ffffff" />
+  
+  <!-- 摄像机支架 -->
+  <rect x="108" y="176" width="40" height="8" rx="3" fill="#ffffff" />
+  
+  <!-- 摄像机指示器（运行状态） -->
+  <circle cx="75" cy="100" r="6" fill="#2d6a4f" />
+  
+  <!-- 加一些光效 -->
+  <circle cx="90" cy="90" r="30" fill="#ffffff" opacity="0.1" />
+  <circle cx="160" cy="170" r="40" fill="#ffffff" opacity="0.05" />
+</svg>

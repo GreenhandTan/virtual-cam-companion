@@ -1,0 +1,62 @@
+name: Build VirtualCam Companion
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyvirtualcam opencv-python Pillow pyinstaller
+
+      - name: Extract OBS Virtual Camera driver
+        run: powershell -ExecutionPolicy Bypass -File scripts/extract_obs_vcam.ps1
+
+      - name: Build exe with PyInstaller
+        shell: cmd
+        run: |
+          pyinstaller ^
+            --onefile ^
+            --windowed ^
+            --name "VirtualCamCompanion" ^
+            --icon "app.ico" ^
+            --distpath "dist" ^
+            --workpath "build" ^
+            --specpath "." ^
+            app.py
+
+      - name: Compile Installer (Inno Setup)
+        shell: cmd
+        run: |
+          choco install innosetup -y
+          iscc setup.iss /Oinstaller
+
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: VirtualCamCompanion-Setup
+          path: installer/VirtualCamCompanion-Setup.exe
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: installer/VirtualCamCompanion-Setup.exe
+          generate_release_notes: true
