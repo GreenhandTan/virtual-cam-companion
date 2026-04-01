@@ -1,6 +1,6 @@
 """
 从 pyvirtualcam 包中提取 OBS 虚拟摄像头驱动 DLL
-用于打包到安装包中
+兼容 pyvirtualcam 0.9.x (自带驱动)
 """
 import os
 import shutil
@@ -10,31 +10,40 @@ def extract_driver(output_dir="driver"):
     try:
         import pyvirtualcam
         cam_dir = os.path.dirname(pyvirtualcam.__file__)
-        
-        # 查找 OBS 虚拟摄像头 DLL
-        dll_path = os.path.join(cam_dir, "obs-virtualcam-module", "obs-virtualcam-module.dll")
-        
-        if not os.path.exists(dll_path):
-            # 尝试其他可能的路径
-            for root, dirs, files in os.walk(cam_dir):
-                for f in files:
-                    if "obs-virtualcam" in f.lower() and f.endswith(".dll"):
-                        dll_path = os.path.join(root, f)
-                        break
-                if os.path.exists(dll_path):
-                    break
-        
-        if os.path.exists(dll_path):
+        print(f"pyvirtualcam version: {pyvirtualcam.__version__}")
+        print(f"pyvirtualcam dir: {cam_dir}")
+
+        # 搜索所有 DLL 文件
+        dll_candidates = []
+        for root, dirs, files in os.walk(cam_dir):
+            for f in files:
+                if f.endswith(".dll"):
+                    full = os.path.join(root, f)
+                    dll_candidates.append(full)
+                    print(f"  Found: {full} ({os.path.getsize(full) // 1024}KB)")
+
+        # 优先找 obs-virtualcam 相关的 DLL
+        vcam_dll = None
+        for path in dll_candidates:
+            basename = os.path.basename(path).lower()
+            if "obs-virtualcam" in basename or "virtualcam" in basename:
+                vcam_dll = path
+                break
+
+        # 如果没找到，用第一个 DLL（可能是 obs-virtualcam-module）
+        if not vcam_dll and dll_candidates:
+            vcam_dll = dll_candidates[0]
+
+        if vcam_dll:
             os.makedirs(output_dir, exist_ok=True)
             dst = os.path.join(output_dir, "obs-virtualcam-module.dll")
-            shutil.copy2(dll_path, dst)
-            print(f"✅ 驱动已提取: {dst} ({os.path.getsize(dst) // 1024}KB)")
+            shutil.copy2(vcam_dll, dst)
+            print(f"\n✅ 驱动已提取: {dst} ({os.path.getsize(dst) // 1024}KB)")
             return True
         else:
-            print(f"❌ 未找到 OBS 虚拟摄像头驱动")
-            print(f"   搜索路径: {cam_dir}")
+            print(f"\n❌ 未找到任何 DLL 文件")
             return False
-            
+
     except ImportError:
         print("❌ pyvirtualcam 未安装")
         return False
