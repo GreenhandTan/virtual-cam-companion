@@ -41,35 +41,21 @@ jobs:
             --specpath "." ^
             app.py
 
-      - name: Create placeholder LICENSE
+      - name: Compile Installer with Inno Setup
+        shell: cmd
         run: |
-          if (-not (Test-Path LICENSE)) {
-            "MIT License" | Out-File LICENSE
-          }
+          choco install innosetup -y
+          iscc setup.iss /Oinstaller
 
-      - name: Compile Installer (Inno Setup)
-        uses: Minionguyjpro/inno-setup-action@v1
-        with:
-          path: setup.iss
-          options: /Oinstaller
-
-      - name: Upload Installer artifact
+      - name: Upload Installer
         uses: actions/upload-artifact@v4
         with:
           name: VirtualCamCompanion-Setup
           path: installer/VirtualCamCompanion-Setup.exe
 
-      - name: Upload Portable artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: VirtualCamCompanion-Portable
-          path: dist/VirtualCamCompanion.exe
-
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            installer/VirtualCamCompanion-Setup.exe
-            dist/VirtualCamCompanion.exe
+          files: installer/VirtualCamCompanion-Setup.exe
           generate_release_notes: true
