@@ -29,6 +29,7 @@ jobs:
           pip install pyvirtualcam opencv-python Pillow pyinstaller
 
       - name: Build with PyInstaller
+        shell: cmd
         run: |
           pyinstaller ^
             --onefile ^
@@ -40,6 +41,7 @@ jobs:
             app.py
 
       - name: Create release package
+        shell: cmd
         run: |
           mkdir release
           copy dist\VirtualCamCompanion.exe release\
