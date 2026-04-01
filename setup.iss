@@ -18,7 +18,6 @@ DisableProgramGroupPage=yes
 OutputDir=installer
 OutputBaseFilename=VirtualCamCompanion-Setup
 SetupIconFile=app.ico
-WizardSmallImageFile=app.ico
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
