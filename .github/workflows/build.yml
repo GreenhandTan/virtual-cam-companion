@@ -2,7 +2,6 @@ name: Build VirtualCam Companion
 
 on:
   push:
-    branches: [main]
     tags: ['v*']
   workflow_dispatch:
 
@@ -45,7 +44,7 @@ jobs:
       - name: Create placeholder LICENSE
         run: |
           if (-not (Test-Path LICENSE)) {
-            "MIT License - See https://github.com/GreenhandTan/virtual-cam-companion" | Out-File LICENSE
+            "MIT License" | Out-File LICENSE
           }
 
       - name: Compile Installer (Inno Setup)
