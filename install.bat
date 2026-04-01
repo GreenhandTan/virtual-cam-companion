@@ -57,20 +57,18 @@ if %errorlevel% neq 0 (
     )
 )
 
-:: 创建桌面快捷方式
+:: 创建桌面快捷方式 (使用 PowerShell)
 echo.
 echo [4/4] 创建桌面快捷方式...
-set SCRIPT="%TEMP%\create_shortcut.vbs"
-echo Set oWS = WScript.CreateObject("WScript.Shell") > %SCRIPT%
-echo sLinkFile = oWS.SpecialFolders("Desktop") ^& "\VirtualCam Companion.lnk" >> %SCRIPT%
-echo Set oLink = oWS.CreateShortcut(sLinkFile) >> %SCRIPT%
-echo oLink.TargetPath = "%~dp0run.bat" >> %SCRIPT%
-echo oLink.WorkingDirectory = "%~dp0" >> %SCRIPT%
-echo oLink.IconLocation = "%SystemRoot%\System32\shell32.dll,44" >> %SCRIPT%
-echo oLink.Description = "VirtualCam Companion - 虚拟摄像头" >> %SCRIPT%
-echo oLink.Save >> %SCRIPT%
-cscript /nologo %SCRIPT%
-del %SCRIPT%
+powershell -NoProfile -Command ^
+  "$ws = New-Object -ComObject WScript.Shell; " ^
+  "$desktop = [Environment]::GetFolderPath('Desktop'); " ^
+  "$lnk = $ws.CreateShortcut($desktop + '\VirtualCam Companion.lnk'); " ^
+  "$lnk.TargetPath = '%~dp0run.bat'; " ^
+  "$lnk.WorkingDirectory = '%~dp0'; " ^
+  "$lnk.IconLocation = '$env:SystemRoot\System32\shell32.dll,44'; " ^
+  "$lnk.Description = 'VirtualCam Companion'; " ^
+  "$lnk.Save()"
 echo     桌面快捷方式已创建 ✓
 
 echo.
