@@ -4,11 +4,6 @@ on:
   push:
     branches: [main]
     tags: ['v*']
-    paths:
-      - 'app.py'
-      - 'requirements.txt'
-      - 'install.bat'
-      - 'run.bat'
   workflow_dispatch:
 
 jobs:
@@ -49,7 +44,7 @@ jobs:
           copy install.bat release\
           copy requirements.txt release\
           copy README.md release\
-          echo 📷 VirtualCam Companion - 虚拟摄像头工具 > release\使用说明.txt
+          echo 📷 VirtualCam Companion > release\使用说明.txt
           echo. >> release\使用说明.txt
           echo 首次使用：双击 install.bat 安装虚拟摄像头驱动 >> release\使用说明.txt
           echo 日常使用：双击 VirtualCamCompanion.exe >> release\使用说明.txt
