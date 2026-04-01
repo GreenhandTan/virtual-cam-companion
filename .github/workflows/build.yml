@@ -1,0 +1,65 @@
+name: Build VirtualCam Companion
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'app.py'
+      - 'requirements.txt'
+      - 'install.bat'
+      - 'run.bat'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyvirtualcam opencv-python Pillow pyinstaller
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller ^
+            --onefile ^
+            --windowed ^
+            --name "VirtualCamCompanion" ^
+            --distpath "dist" ^
+            --workpath "build" ^
+            --specpath "." ^
+            app.py
+
+      - name: Create release package
+        run: |
+          mkdir release
+          copy dist\VirtualCamCompanion.exe release\
+          copy install.bat release\
+          copy requirements.txt release\
+          copy README.md release\
+          echo 📷 VirtualCam Companion - 虚拟摄像头工具 > release\使用说明.txt
+          echo. >> release\使用说明.txt
+          echo 首次使用：双击 install.bat 安装虚拟摄像头驱动 >> release\使用说明.txt
+          echo 日常使用：双击 VirtualCamCompanion.exe >> release\使用说明.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VirtualCamCompanion
+          path: release/
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
+          generate_release_notes: true

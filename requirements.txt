@@ -1,0 +1,3 @@
+pyvirtualcam>=0.12.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
