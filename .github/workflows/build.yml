@@ -27,6 +27,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyvirtualcam opencv-python Pillow pyinstaller
 
+      - name: Extract OBS Virtual Camera driver
+        run: python scripts/extract_driver.py driver
+
       - name: Build with PyInstaller
         shell: cmd
         run: |
@@ -39,28 +42,35 @@ jobs:
             --specpath "." ^
             app.py
 
-      - name: Create release package
-        shell: cmd
+      - name: Create placeholder LICENSE
         run: |
-          mkdir release
-          copy dist\VirtualCamCompanion.exe release\
-          copy install.bat release\
-          copy requirements.txt release\
-          copy README.md release\
-          echo 📷 VirtualCam Companion > release\使用说明.txt
-          echo. >> release\使用说明.txt
-          echo 首次使用：双击 install.bat 安装虚拟摄像头驱动 >> release\使用说明.txt
-          echo 日常使用：双击 VirtualCamCompanion.exe >> release\使用说明.txt
+          if (-not (Test-Path LICENSE)) {
+            "MIT License - See https://github.com/GreenhandTan/virtual-cam-companion" | Out-File LICENSE
+          }
 
-      - name: Upload artifact
+      - name: Compile Installer (Inno Setup)
+        uses: Minionguyjpro/inno-setup-action@v1
+        with:
+          path: setup.iss
+          options: /Oinstaller
+
+      - name: Upload Installer artifact
         uses: actions/upload-artifact@v4
         with:
-          name: VirtualCamCompanion
-          path: release/
+          name: VirtualCamCompanion-Setup
+          path: installer/VirtualCamCompanion-Setup.exe
+
+      - name: Upload Portable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VirtualCamCompanion-Portable
+          path: dist/VirtualCamCompanion.exe
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: release/*
+          files: |
+            installer/VirtualCamCompanion-Setup.exe
+            dist/VirtualCamCompanion.exe
           generate_release_notes: true
