@@ -17,12 +17,15 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=installer
 OutputBaseFilename=VirtualCamCompanion-Setup
+SetupIconFile=app.ico
+WizardSmallImageFile=app.ico
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
 PrivilegesRequired=admin
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -32,6 +35,7 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription:
 
 [Files]
 Source: "dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "app.ico"; DestDir: "{app}"; Flags: ignoreversion
 #ifdef IncludeVcam32
 Source: "driver\obs-virtualcam-module32.dll"; DestDir: "{app}\driver"; Flags: regserver ignoreversion; Check: not Is64BitInstallMode
 #endif
@@ -39,13 +43,12 @@ Source: "driver\obs-virtualcam-module64.dll"; DestDir: "{app}\driver"; Flags: re
 Source: "README.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\app.ico"
 Name: "{group}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\app.ico"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
-; 卸载时取消注册虚拟摄像头驱动
 Filename: "regsvr32"; Parameters: "/s /u ""{app}\driver\obs-virtualcam-module64.dll"""; Flags: runhidden; RunOnceId: "UnregVCam64"; Check: Is64BitInstallMode
