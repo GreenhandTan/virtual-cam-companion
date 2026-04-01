@@ -32,7 +32,6 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription:
 
 [Files]
 Source: "dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "driver\obs-virtualcam-module.dll"; DestDir: "{app}\driver"; Flags: regserver ignoreversion
 Source: "README.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
@@ -42,6 +41,3 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall skipifsilent
-
-[UninstallRun]
-Filename: "regsvr32"; Parameters: "/s /u ""{app}\driver\obs-virtualcam-module.dll"""; Flags: runhidden
