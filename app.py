@@ -93,7 +93,17 @@ class VirtualCamManager:
             return True, f"虚拟摄像头已启动: {self.device_name}"
 
         except Exception as e:
-            return False, f"启动失败: {str(e)}\n\n请确认已安装虚拟摄像头驱动（OBS Virtual Camera）"
+            err = str(e)
+            if "No virtual camera" in err or "backend" in err.lower():
+                return False, (
+                    "未检测到虚拟摄像头驱动\n\n"
+                    "请安装 OBS Studio（含 Virtual Camera）：\n"
+                    "https://obsproject.com/\n\n"
+                    "或运行以下命令安装驱动：\n"
+                    "pip install pyvirtualcam\n"
+                    "然后按提示操作"
+                )
+            return False, f"启动失败: {err}"
 
     def _loop(self):
         """持续输出帧"""
