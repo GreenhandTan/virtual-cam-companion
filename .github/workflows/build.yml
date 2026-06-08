@@ -4,6 +4,11 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (如 v2.0.1)'
+        required: true
+        default: 'v2.0.1'
 
 permissions:
   contents: write
@@ -64,4 +69,4 @@ jobs:
         with:
           files: installer/VirtualCamCompanion-Setup.exe
           generate_release_notes: true
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
