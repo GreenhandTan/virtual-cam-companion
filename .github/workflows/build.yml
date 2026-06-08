@@ -40,6 +40,11 @@ jobs:
             --distpath "dist" ^
             --workpath "build" ^
             --specpath "." ^
+            --hidden-import "utils" ^
+            --hidden-import "config" ^
+            --hidden-import "cam_manager" ^
+            --hidden-import "api_server" ^
+            --hidden-import "gui" ^
             app.py
 
       - name: Compile Installer (Inno Setup)
