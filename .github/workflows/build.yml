@@ -34,6 +34,25 @@ jobs:
       - name: Extract OBS Virtual Camera driver
         run: powershell -ExecutionPolicy Bypass -File scripts/extract_obs_vcam.ps1
 
+      - name: Set version in setup.iss
+        shell: powershell
+        run: |
+          # 获取版本号：手动触发用 inputs.version，tag 触发用 tag 名
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $version = "${{ inputs.version }}"
+          } else {
+            $version = "${{ github.ref_name }}"
+          }
+          Write-Host "Version: $version"
+          
+          # 替换 setup.iss 中的版本号
+          $content = Get-Content setup.iss -Raw
+          $content = $content -replace '#define MyAppVersion ".*"', "#define MyAppVersion `"$version`""
+          Set-Content setup.iss -Value $content
+          
+          Write-Host "setup.iss updated:"
+          Select-String -Path setup.iss -Pattern "MyAppVersion"
+
       - name: Build exe with PyInstaller
         shell: cmd
         run: |
