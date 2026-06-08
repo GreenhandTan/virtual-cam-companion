@@ -60,8 +60,8 @@ jobs:
           path: installer/VirtualCamCompanion-Setup.exe
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: installer/VirtualCamCompanion-Setup.exe
           generate_release_notes: true
+          tag_name: ${{ github.ref_name }}
